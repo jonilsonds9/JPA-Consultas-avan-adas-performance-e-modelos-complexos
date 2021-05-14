@@ -1,8 +1,11 @@
 package br.com.alura.loja.modelo;
 
+import org.w3c.dom.stylesheets.LinkStyle;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "pedidos")
@@ -16,6 +19,9 @@ public class Pedido {
 
     @ManyToOne
     private Cliente cliente;
+
+    @OneToMany
+    private List<ItemPedido> itens;
 
     public Pedido() {
     }
