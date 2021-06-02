@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.*;
 
 import br.com.alura.loja.modelo.Produto;
 
@@ -89,4 +90,25 @@ public class ProdutoDao {
 		return query.getResultList();
 	}
 
+	public List<Produto> buscarPorParametrosComCriteria(String nome, BigDecimal preco,
+											 LocalDate dataCadastro) {
+
+		CriteriaBuilder builder = em.getCriteriaBuilder();
+		CriteriaQuery<Produto> query = builder.createQuery(Produto.class);
+		Root<Produto> from = query.from(Produto.class);
+
+		Predicate filtros = builder.and();
+		if (nome != null && !nome.trim().isEmpty()) {
+			filtros = builder.and(filtros, builder.equal(from.get("nome"), nome));
+		}
+		if (preco != null) {
+			filtros = builder.and(filtros, builder.equal(from.get("preco"), preco));
+		}
+		if (dataCadastro != null) {
+			filtros = builder.and(filtros, builder.equal(from.get("dataCadastro"), dataCadastro));
+		}
+		query.where(filtros);
+
+		return em.createQuery(query).getResultList();
+	}
 }
